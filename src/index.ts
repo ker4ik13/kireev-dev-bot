@@ -1,4 +1,5 @@
-const { config } = require("dotenv");
+import { config } from "dotenv";
+import { CallbackQuery, Message } from "node-telegram-bot-api";
 
 const TelegramBot = require("node-telegram-bot-api");
 
@@ -16,13 +17,13 @@ const TelegramBot = require("node-telegram-bot-api");
 
 // Импорт конфига
 const envConfig = config().parsed;
-if (!envConfig) {
-  throw new Error("Файл .env пустой");
+if(!envConfig) {
+  throw new Error('Файл .env пустой');
 }
-const TOKEN = envConfig["TOKEN"];
+const TOKEN = envConfig['TOKEN']
 
-if (!TOKEN) {
-  throw new Error("Ключ в файле .env не найден");
+if(!TOKEN){
+  throw new Error('Ключ в файле .env не найден');
 }
 
 // Инициализация бота
@@ -84,12 +85,12 @@ const orderKeyboard = {
   },
 };
 
-const start = async (chatId, name) => {
+const start = async (chatId: number, name: string) => {
   const returnText = `Привет ${name}, рад видеть тебя в моем уголке разработки! Я - Кирилл, Frontend разработчик. С моей помощью ты сможешь ознакомиться с моими проектами, удобно оформить заказ или задать любой вопрос. Давай вместе создадим что-то интересное и полезное! 🚀\nМожешь пользоваться кнопками для удобной навигации.`;
   return await bot.sendMessage(chatId, returnText, menuKeyboard);
 };
 
-const info = async (chatId, userName) => {
+const info = async (chatId: number, userName: string) => {
   return await bot.sendMessage(
     chatId,
     "брат, надо бы доработать команду /info",
@@ -114,7 +115,7 @@ const info = async (chatId, userName) => {
 //   }
 // };
 
-const order = async (chatId) => {
+const order = async (chatId: number) => {
   return await bot.sendMessage(
     chatId,
     "Какой продукт вы хотите заказать?",
@@ -122,12 +123,12 @@ const order = async (chatId) => {
   );
 };
 
-const sendOrder = async (userName, chatId, product) => {
+const sendOrder = async (userName: string, chatId: number, product: string) => {
   const result = `Пользователь @${userName} сделал новый заказ! Подробности заказа:\n\n<b>Пользователь:</b> @${userName}\n<b>Чат id:</b> ${chatId}\n<b>Продукт:</b> ${product}`;
   await bot.sendMessage(ADMIN_CHAT_ID, result, { parse_mode: "HTML" });
 };
 
-bot.on("message", async (message) => {
+bot.on("message", async (message: Message) => {
   const chatId = message.chat.id;
   const text = message.text;
   const audio = message.audio;
@@ -162,7 +163,7 @@ bot.on("message", async (message) => {
   }
 });
 
-bot.on("callback_query", async (message) => {
+bot.on("callback_query", async (message: CallbackQuery) => {
   const data = message.data;
   const chatId = message.message?.chat.id;
   const userName = message.message?.chat.username;

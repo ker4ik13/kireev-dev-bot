@@ -1,21 +1,23 @@
 {
-  "name": "tg-bot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "tg-bot-kireev-dev",
+  "version": "0.0.1",
+  "description": "Personal bot for the Kireev Dev group",
+  "main": "index.ts",
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "ker4ik13 <kireev.kirill2004@mail.ru>",
+  "repository": "https://github.com/ker4ik13/tg-bot-kireev-dev",
   "license": "ISC",
   "devDependencies": {
     "axios": "^1.5.0",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "node-telegram-bot-api": "^0.61.0"
   }
 }

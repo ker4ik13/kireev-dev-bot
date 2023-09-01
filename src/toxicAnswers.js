@@ -100,3 +100,34 @@ module.exports = {
   voiceAnswers,
   stickerAnswers,
 };
+
+// if (voice) {
+//   return await bot.sendMessage(chatId, voiceAnswers());
+// }
+// if (photo) {
+//   return await bot.sendMessage(chatId, photoAnswers());
+// }
+// if (video) {
+//   return await bot.sendMessage(chatId, videoAnswers(video.duration));
+// }
+// if (videoNote) {
+//   return await bot.sendMessage(chatId, videoNoteAnswers(videoNote.duration));
+// }
+// if (contact) {
+//   return await bot.sendMessage(
+//     chatId,
+//     contactAnswers(contact.first_name, contact.phone_number),
+//   );
+// }
+// if (audio) {
+//   return await bot.sendMessage(
+//     chatId,
+//     audioAnswers(audio.title, audio.file_size, audio.duration),
+//   );
+// }
+// if (location) {
+//   return await bot.sendMessage(chatId, locationAnswers());
+// }
+// if (sticker) {
+//   return await bot.sendAnimation(chatId, stickerAnswers());
+// }
