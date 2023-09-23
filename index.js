@@ -34,13 +34,65 @@ const ADMIN_CHAT_ID = 785206267;
 
 // Команды
 const commadns = bot.setMyCommands([
-  { command: "/start", description: "Старт" },
   { command: "/menu", description: "Меню" },
-  { command: "/info", description: "Информация о обо мне" },
   { command: "/portfolio", description: "Портфолио" },
   { command: "/ask", description: "Задать вопрос" },
   { command: "/contacts", description: "Контакты" },
 ]);
+
+const states = {
+  menu: "menu",
+  portfolio: "portfolio",
+  contacts: "contacts",
+  ask: "ask",
+  order: "order",
+};
+
+const userState = {
+  chatId: "",
+  state: states.menu,
+};
+
+let userStates = [];
+
+const findUser = (chatId) => {
+  let user = "";
+  let index = "not found";
+  for (let i = 0; i < userStates.length; i++) {
+    if (userStates[i].chatId === chatId) {
+      user = userStates[i].chatId;
+      index = i;
+      break;
+    }
+  }
+  if (user) {
+    return {
+      userChatId: chatId,
+      userIndex: index,
+    };
+  } else {
+    return false;
+  }
+};
+
+const setUserState = (chatId, state) => {
+  const user = findUser(chatId);
+
+  if (user) {
+    for (let i = 0; i < userStates.length; i++) {
+      if (userStates[i].chatId === chatId) {
+        userStates[i].state = state;
+      }
+    }
+  } else {
+    userStates.push({
+      chatId: chatId,
+      state: state,
+    });
+  }
+  console.log(user);
+  console.log(userStates);
+};
 
 // Menu
 const menuKeyboard = {
@@ -54,7 +106,6 @@ const menuKeyboard = {
         { text: "Задать вопрос", callback_data: "/ask" },
         { text: "Сделать заказ", callback_data: "/order" },
       ],
-      [{ text: "Информация обо мне", callback_data: "/info" }],
     ],
   },
 };
@@ -84,37 +135,46 @@ const orderKeyboard = {
   },
 };
 
+const contactsKeyboard = {
+  reply_markup: {
+    inline_keyboard: [
+      [
+        { text: "VK", url: "https://vk.com/random_4el" },
+        { text: "TG", url: "https://t.me/ker4ik13" },
+        { text: "TG Channel", url: "https://t.me/kireev_dev" },
+      ],
+      [
+        { text: "GitHub", url: "https://github.com/ker4ik13" },
+        { text: "Twitter", url: "https://twitter.com/kireev_dev" },
+      ],
+      [{ text: "Назад", callback_data: "/menu" }],
+    ],
+  },
+};
+
+const askKeyboard = {
+  reply_markup: {
+    inline_keyboard: [[{ text: "Назад", callback_data: "/menu" }]],
+  },
+};
+
 const start = async (chatId, name) => {
+  setUserState(chatId, states.menu);
+
   const returnText = `Привет ${name}, рад видеть тебя в моем уголке разработки! Я - Кирилл, Frontend разработчик. С моей помощью ты сможешь ознакомиться с моими проектами, удобно оформить заказ или задать любой вопрос. Давай вместе создадим что-то интересное и полезное! 🚀\nМожешь пользоваться кнопками для удобной навигации.`;
+  state = states.menu;
   return await bot.sendMessage(chatId, returnText, menuKeyboard);
 };
 
-const info = async (chatId, userName) => {
-  return await bot.sendMessage(
-    chatId,
-    "брат, надо бы доработать команду /info",
-    menuKeyboard,
-  );
+const menu = async (chatId) => {
+  setUserState(chatId, states.menu);
+
+  return await bot.sendMessage(chatId, "Меню", menuKeyboard);
 };
 
-// const spam = async (chatId) => {
-//   const dimaId = "dsabdas";
-//   try {
-//     await bot.sendMessage(dimaId, "Дима лох бля жиес");
-//     return await bot.sendMessage(
-//       chatId,
-//       `Сообщение пользователю ${dimaId} отправлено`,
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return await bot.sendMessage(
-//       chatId,
-//       `Произошла ошибка. Сообщение пользователю ${dimaId} не отправлено. Ошибка: ${error}`,
-//     );
-//   }
-// };
-
 const order = async (chatId) => {
+  setUserState(chatId, states.order);
+
   return await bot.sendMessage(
     chatId,
     "Какой продукт вы хотите заказать?",
@@ -124,7 +184,56 @@ const order = async (chatId) => {
 
 const sendOrder = async (userName, chatId, product) => {
   const result = `Пользователь @${userName} сделал новый заказ! Подробности заказа:\n\n<b>Пользователь:</b> @${userName}\n<b>Чат id:</b> ${chatId}\n<b>Продукт:</b> ${product}`;
-  await bot.sendMessage(ADMIN_CHAT_ID, result, { parse_mode: "HTML" });
+
+  setUserState(chatId, states.menu);
+
+  return await bot.sendMessage(ADMIN_CHAT_ID, result, { parse_mode: "HTML" });
+};
+
+const contacts = async (chatId) => {
+  setUserState(chatId, states.contacts);
+
+  return await bot.sendMessage(
+    chatId,
+    "Мои контакты. Жду сообщения",
+    contactsKeyboard,
+  );
+};
+
+const portfolio = async (chatId) => {
+  setUserState(chatId, states.portfolio);
+
+  return await bot.sendMessage(chatId, "Портфолио", portfolioKeyboard);
+};
+
+const ask = async (chatId) => {
+  setUserState(chatId, states.ask);
+
+  // return await bot.sendMessage(
+  //   chatId,
+  //   "Команда /ask временно не работает",
+  //   menuKeyboard,
+  // );
+
+  return await bot.sendMessage(
+    chatId,
+    "Задайте любой интересующий вас вопрос и я свяжусь с вами позже",
+    askKeyboard,
+  );
+};
+
+const askSend = async (chatId, userName, userMessage) => {
+  setUserState(chatId, states.menu);
+
+  const message = `Пользователь @${userName} задал вопрос:\n\n"${userMessage}"`;
+
+  await bot.sendMessage(ADMIN_CHAT_ID, message);
+
+  return await bot.sendMessage(
+    chatId,
+    "Ваше сообщение отправлено. Спасибо за вопрос, ожидайте ответа.",
+    menuKeyboard,
+  );
 };
 
 bot.on("message", async (message) => {
@@ -143,22 +252,31 @@ bot.on("message", async (message) => {
 
   switch (text) {
     case "/start":
-      return start(chatId, firstName);
+      return await start(chatId, firstName);
 
     case "/menu":
-      return await bot.sendMessage(chatId, "Меню", menuKeyboard);
+      return await menu(chatId);
 
     case "/portfolio":
-      return await bot.sendMessage(chatId, "Портфолио", portfolioKeyboard);
-
-    case "/info":
-      return info(chatId, userName);
+      return await portfolio(chatId);
 
     case "/order":
-      return order(chatId);
+      return await order(chatId);
+
+    case "/contacts":
+      return await contacts(chatId);
+
+    case "/ask":
+      return await ask(chatId);
 
     default:
-      return start(chatId, userName);
+      const user = findUser(chatId);
+
+      if (user && userStates[user.userIndex].state === states.ask) {
+        return await askSend(chatId, userName, text);
+      } else {
+        return await menu(chatId);
+      }
   }
 });
 
@@ -170,25 +288,29 @@ bot.on("callback_query", async (message) => {
 
   switch (data) {
     case "/start":
-      return start(chatId, firstName);
+      return await start(chatId, firstName);
 
     case "/menu":
-      return await bot.sendMessage(chatId, "Меню", menuKeyboard);
+      return await menu(chatId);
 
     case "/portfolio":
-      return await bot.sendMessage(chatId, "Портфолио", portfolioKeyboard);
-
-    case "/info":
-      return info(chatId, userName);
+      return await portfolio(chatId);
 
     case "/order":
-      return order(chatId);
+      return await order(chatId);
+
+    case "/contacts":
+      return await contacts(chatId);
+
+    case "/ask":
+      return await ask(chatId);
 
     case "#design":
       await sendOrder(userName, chatId, "Дизайн");
       return await bot.sendMessage(
         chatId,
         "Заявка успешно отправлена. Напишите @ker4ik13 по поводу заказа, либо ждите сообщение.",
+        menuKeyboard,
       );
 
     case "#website":
@@ -196,6 +318,7 @@ bot.on("callback_query", async (message) => {
       return await bot.sendMessage(
         chatId,
         "Заявка успешно отправлена. Напишите @ker4ik13 по поводу заказа, либо ждите сообщение.",
+        menuKeyboard,
       );
 
     case "#chat-bot":
@@ -203,6 +326,7 @@ bot.on("callback_query", async (message) => {
       return await bot.sendMessage(
         chatId,
         "Заявка успешно отправлена. Напишите @ker4ik13 по поводу заказа, либо ждите сообщение.",
+        menuKeyboard,
       );
 
     case "#design+site":
@@ -210,9 +334,10 @@ bot.on("callback_query", async (message) => {
       return await bot.sendMessage(
         chatId,
         "Заявка успешно отправлена. Напишите @ker4ik13 по поводу заказа, либо ждите сообщение.",
+        menuKeyboard,
       );
 
     default:
-      return start(chatId, userName);
+      return await start(chatId, userName);
   }
 });
