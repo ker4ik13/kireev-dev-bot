@@ -1,74 +1,73 @@
+import type { SendMessageOptions } from "node-telegram-bot-api";
+import { MenuButtons } from "./buttons/MenuButtons";
+import { ProductsButtons } from "./buttons/ProductsButtons";
+import { ContactsButton } from "./buttons/ContactsButtons";
+import { ProjectsButtons } from "./buttons/ProjectsButtons";
+
 // Меню клавиатура
-export const menuKeyboard = {
+export const menuKeyboard: SendMessageOptions = {
   reply_markup: {
     inline_keyboard: [
       [
-        { text: "Портфолио", callback_data: "/portfolio" },
-        { text: "Контакты", callback_data: "/contacts" },
+        MenuButtons.PortfolioButton,
+        MenuButtons.ContactsButton,
       ],
       [
-        { text: "Задать вопрос", callback_data: "/ask" },
-        { text: "Сделать заказ", callback_data: "/order" },
+        MenuButtons.AskButton,
+        MenuButtons.OrderButton,
       ],
     ],
   },
 };
 
 // Портфолио клавиатура
-export const portfolioKeyboard = {
+export const portfolioKeyboard: SendMessageOptions = {
   reply_markup: {
     inline_keyboard: [
-      [{ text: "Dixie Palms", url: "https://dixie-palms.vercel.app/" }],
-      [{ text: "Назад", callback_data: "/menu" }],
+      [ProjectsButtons.DixiePalms],
+      [MenuButtons.BackButton],
     ],
   },
 };
 
 // Клавиатура для заказа
-export const orderKeyboard = {
+export const orderKeyboard: SendMessageOptions = {
   reply_markup: {
     inline_keyboard: [
       [
-        { text: "Дизайн сайта", callback_data: "#design" },
-        { text: "Разработка сайта", callback_data: "#website" },
+        ProductsButtons.DesignButton,
+        ProductsButtons.SiteButton,
       ],
       [
-        { text: "Разработа чат-бота", callback_data: "#chat-bot" },
-        { text: "Дизайн + сайт", callback_data: "#design+site" },
+        ProductsButtons.ChatBotButton,
+        ProductsButtons.SiteAndDesignButton,
       ],
+      [MenuButtons.BackButton],
     ],
   },
 };
 
 // Клавиатура контакты
-export const contactsKeyboard = {
+export const contactsKeyboard: SendMessageOptions = {
   reply_markup: {
     inline_keyboard: [
       [
-        { text: "VK", url: "https://vk.com/random_4el" },
-        { text: "TG", url: "https://t.me/ker4ik13" },
-        { text: "TG Channel", url: "https://t.me/kireev_dev" },
+        ContactsButton.VkButton,
+        ContactsButton.TgButton,
+        ContactsButton.TgGroupButton,
       ],
       [
-        { text: "GitHub", url: "https://github.com/ker4ik13" },
-        { text: "Twitter", url: "https://twitter.com/kireev_dev" },
+        ContactsButton.GithubButton,
+        ContactsButton.TwitterButton,
       ],
-      [{ text: "Назад", callback_data: "/menu" }],
+      [MenuButtons.BackButton],
     ],
   },
 };
 
 // Клавиатура для вопроса
-export const askKeyboard = {
+export const askKeyboard: SendMessageOptions = {
   reply_markup: {
-    inline_keyboard: [[{ text: "Назад", callback_data: "/menu" }]],
+    inline_keyboard: [[MenuButtons.BackButton]],
   },
 };
-
-// module.exports = {
-//   menuKeyboard,
-//   portfolioKeyboard,
-//   orderKeyboard,
-//   contactsKeyboard,
-//   askKeyboard,
-// };

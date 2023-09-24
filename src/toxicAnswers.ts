@@ -1,4 +1,4 @@
-const randomNumber = (length) => {
+const randomNumber = (length: number) => {
   return Math.floor(Math.random() * length);
 };
 
@@ -12,7 +12,7 @@ const voiceAnswers = () => {
   return answers[randomNumber(answers.length)];
 };
 
-const videoAnswers = (duration) => {
+const videoAnswers = (duration: number) => {
   const answers = [
     "Хуйня видос, переделывай",
     "Я не буду на это отвечать, ты совсем конченый если не понимаешь сразу...",
@@ -24,7 +24,7 @@ const videoAnswers = (duration) => {
   return answers[randomNumber(answers.length)];
 };
 
-const audioAnswers = (title, size, duration) => {
+const audioAnswers = (title: string, size: number, duration: number) => {
   const answers = [
     "Я даже будучи тупым роботом не стану это слушать, а тебе видимо это нравится",
     "Звучит как понос, кстати как и твое имя",
@@ -48,7 +48,7 @@ const photoAnswers = () => {
   return answers[randomNumber(answers.length)];
 };
 
-const videoNoteAnswers = (duration) => {
+const videoNoteAnswers = (duration: number) => {
   const answers = [
     "Бляя иди нахуй пожалуйста со своими кружками",
     "Если там твой ебальник, то убейся реально ну чел...",
@@ -58,7 +58,7 @@ const videoNoteAnswers = (duration) => {
   return answers[randomNumber(answers.length)];
 };
 
-const contactAnswers = (name, number) => {
+const contactAnswers = (name: string, number: number) => {
   const answers = [
     "Че за чел? Мне не интересно",
     "МНЕ ПОХУЙ НА НЕГО ИЛИ НЕЕ МНЕ ПОЕБАТЬ ПРОШУ ИДИ НАХУЙ",
