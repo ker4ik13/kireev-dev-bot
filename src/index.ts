@@ -13,6 +13,7 @@ import type { IUserState } from "./interfaces/IUserState";
 import { Products } from "./Products";
 import { ADMIN_CHAT_ID } from "./consts";
 import { checkAllUsers } from "./features/checkAllUsers";
+import { unknownCommand } from "./answers/unknownCommand";
 
 
 // Импорт конфига
@@ -30,16 +31,10 @@ if (!TOKEN) {
 const bot = new TelegramBot(TOKEN, { polling: true });
 const userStates: IUserState[] = [];
 
+bot.setMyCommands(userCommands);
 
 bot.on("message", async (message) => {
   const chatId = message.chat.id;
-
-  if(chatId === ADMIN_CHAT_ID){
-    bot.setMyCommands(adminCommands);
-  } else {
-    bot.setMyCommands(userCommands);
-  }
-
   const text = message.text;
   // const audio = message.audio;
   // const video = message.video;
@@ -72,7 +67,11 @@ bot.on("message", async (message) => {
       return await ask(chatId, userName, userStates, bot);
 
     case '/users':
-      return await checkAllUsers(userStates, bot);
+      if(chatId === ADMIN_CHAT_ID){
+        return await checkAllUsers(userStates, bot);
+      } else {
+        return await unknownCommand(chatId, bot);
+      }
 
     default:
       const user = findUser(chatId, userStates);
@@ -80,7 +79,7 @@ bot.on("message", async (message) => {
       if (user && text && userStates[user.userIndex].state === States.Ask) {
         return await askSend(chatId, userName, text, userStates, bot);
       } else {
-        return await menu(chatId,  userName, userStates, bot);
+        return await unknownCommand(chatId, bot);
       }
   }
 });
@@ -126,7 +125,7 @@ bot.on("callback_query", async (message) => {
         return await sendOrder(userName, chatId, Products.DesignAndSite, userStates, bot);
   
       default:
-        return await menu(chatId, userName, userStates, bot);
+        return await unknownCommand(chatId, bot);
     }
   }
 
