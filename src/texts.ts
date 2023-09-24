@@ -5,6 +5,7 @@ export enum Texts {
     OrderHasBeenSend = 'Заявка успешно отправлена. Напишите @ker4ik13 по поводу заказа, либо ждите сообщение.',
     MessageHasBeenSend = 'Ваше сообщение отправлено. Спасибо за вопрос, ожидайте ответа.',
     AskAnyQuestion = 'Задайте любой интересующий вас вопрос и я свяжусь с вами позже.',
+    WriteCorrectAnswer = 'Пожалуйста, введите корректный вопрос.'
 }
 
 export const greeting = (name: string) => {

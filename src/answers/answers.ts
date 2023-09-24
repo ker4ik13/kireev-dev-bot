@@ -7,6 +7,7 @@ import { setUserState } from "../features/setUserState";
 import { Texts, greeting, newOrder } from "../texts";
 import { askKeyboard, contactsKeyboard, menuKeyboard, orderKeyboard, portfolioKeyboard } from "../keyboards";
 import { ADMIN_CHAT_ID } from "../consts";
+import { Commands } from "../Commands";
 
 export const start = async (chatId: ChatId, name: string, userStates: IUserState[], bot: TelegramBot) => {
   setUserState(chatId, States.Menu, userStates, name);
@@ -72,6 +73,14 @@ export const ask = async (chatId: number, userName: string, userStates: IUserSta
 
 export const askSend = async (chatId: ChatId, userName: string, userMessage: string, userStates: IUserState[], bot: TelegramBot) => {
   setUserState(chatId, States.Menu, userStates, userName);
+
+  if(userMessage === Commands.Ask || 
+    userMessage === Commands.Contacts ||
+    userMessage === Commands.Menu || 
+    userMessage === Commands.Order || 
+    userMessage === Commands.Portfolio){
+      return await bot.sendMessage(chatId, Texts.WriteCorrectAnswer, menuKeyboard);
+    }
 
   const message = `Пользователь @${userName} задал вопрос:\n\n"${userMessage}"`;
 

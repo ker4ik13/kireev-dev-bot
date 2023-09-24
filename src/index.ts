@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import TelegramBot from "node-telegram-bot-api";
 
 import { States } from "./States";
-import { userCommands, adminCommands } from "./commands/commands";
+import { userCommands } from "./commands/botCommands";
 
 // функции
 import { ask, askSend, contacts, menu, order, portfolio, sendOrder, start } from "./answers/answers";
